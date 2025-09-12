@@ -9,12 +9,12 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    clearUser(); // Clear Zustand store
-    localStorage.removeItem('token'); // Remove JWT
+    clearUser();
+    localStorage.removeItem('token');
     localStorage.removeItem('id');
     localStorage.removeItem('name');
     localStorage.removeItem('email');
-    navigate('/login'); // Redirect to login
+    navigate('/login');
   };
 
   return (
