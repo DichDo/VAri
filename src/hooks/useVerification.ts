@@ -27,3 +27,17 @@ export const useVerification = () => {
 
   return { status, loading, error };
 };
+import { useUserStore } from "../store/userStore"
+
+export function useAuth() {
+  const { user, token, setUser, setToken, logout } = useUserStore()
+
+  return {
+    isAuthenticated: !!token,
+    user,
+    token,
+    setUser,
+    setToken,
+    logout
+  }
+}
