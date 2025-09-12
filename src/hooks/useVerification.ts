@@ -1,15 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useUserStore } from '../store/userStore';
-
-interface VerificationStatus {
-  verified: boolean;
-  score: number;
-}
+import { fetchVerificationStatus } from '../services/mockBackend';
 
 export const useVerification = () => {
-  const [status, setStatus] = useState<VerificationStatus | null>(null);
+  const [status, setStatus] = useState<{ verified: boolean; score: number } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
   const token = useUserStore((state) => state.token);
   const userId = useUserStore((state) => state.id);
 
@@ -18,16 +15,7 @@ export const useVerification = () => {
       if (!token || !userId) return;
 
       try {
-        // Replace this with your real backend API
-        const res = await fetch(`https://api.yourdomain.com/verify/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!res.ok) throw new Error('Failed to fetch verification status');
-
-        const data: VerificationStatus = await res.json();
+        const data = await fetchVerificationStatus(userId, token);
         setStatus(data);
       } catch (err: any) {
         setError(err.message);
