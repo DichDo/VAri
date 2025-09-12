@@ -1,14 +1,13 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
-import { useUserStore } from '../store/userStore';
+import React from "react"
+import { Navigate } from "react-router-dom"
+import { useUserStore } from "../store/userStore"
 
-interface PrivateRouteProps {
-  children: JSX.Element;
+interface Props { children: JSX.Element }
+
+const PrivateRoute: React.FC<Props> = ({ children }) => {
+  const token = useUserStore((s) => s.token)
+  if (!token) return <Navigate to="/login" replace />
+  return children
 }
 
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
-  const token = useUserStore((state) => state.token);
-  return token ? children : <Navigate to="/login" replace />;
-};
-
-export default PrivateRoute;
+export default PrivateRoute
