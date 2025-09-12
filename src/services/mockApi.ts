@@ -1,23 +1,41 @@
-interface VerificationStatus {
-  verified: boolean;
-  score: number;
-}
+import React, { useState } from 'react';
+import Navbar from '../components/Navbar';
+import Button from '../components/Button';
+import Modal from '../components/Modal';
+import useVerification from '../hooks/useVerification';
 
-export const fetchVerificationStatus = async (userexport const fetchVerificationStatus = async (userId: string): Promise<VerificationStatus> => {
-  const token = localStorage.getItem('token');
-  const response = await fetch(`https://api.yourdomain.com/verify/${userId}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  if (!response.ok) throw new Error('Failed to fetch verification status');
-  return await response.json();
-};
-Id: string): Promise<VerificationStatus> => {
-  // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 500));
+const ProfilePage: React.FC = () => {
+  const userId = '12345';
+  const { status, loading, error } = useVerification(userId);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Return mock data
-  return {
-    verified: Math.random() > 0.3, // random true/false
-    score: Math.floor(Math.random() * 101), // 0-100
-  };
+  return (
+    <>
+      <Navbar />
+      <div className="p-6 max-w-md mx-auto">
+        <h1 className="text-2xl font-bold mb-4">User Profile</h1>
+
+        {loading && <p>Loading verification status...</p>}
+        {error && <p className="text-red-500">{error}</p>}
+
+        {status && (
+          <div className="bg-gray-100 p-4 rounded shadow">
+            <p><strong>Verified:</strong> {status.verified ? 'Yes' : 'No'}</p>
+            <p><strong>Trust Score:</strong> {status.score}</p>
+            <Button onClick={() => setIsModalOpen(true)}>View Details</Button>
+          </div>
+        )}
+
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          <h2 className="text-xl font-bold">Verification Details</h2>
+          <p>User ID: {userId}</p>
+          <p>Verified: {status?.verified ? 'Yes' : 'No'}</p>
+          <p>Trust Score: {status?.score}</p>
+          <Button onClick={() => setIsModalOpen(false)}>Close</Button>
+        </Modal>
+      </div>
+    </>
+  );
 };
+
+export default ProfilePage;
