@@ -7,6 +7,7 @@ interface UserState {
   token: string;
   setUser: (id: string, name: string, email: string, token: string) => void;
   clearUser: () => void;
+  restoreUserFromStorage: () => void;
 }
 
 export const useUserStore = create<UserState>((set) => ({
@@ -14,6 +15,28 @@ export const useUserStore = create<UserState>((set) => ({
   name: '',
   email: '',
   token: '',
-  setUser: (id, name, email, token) => set({ id, name, email, token }),
-  clearUser: () => set({ id: '', name: '', email: '', token: '' }),
+
+  setUser: (id, name, email, token) => {
+    localStorage.setItem('token', token);
+    localStorage.setItem('id', id);
+    localStorage.setItem('name', name);
+    localStorage.setItem('email', email);
+    set({ id, name, email, token });
+  },
+
+  clearUser: () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('id');
+    localStorage.removeItem('name');
+    localStorage.removeItem('email');
+    set({ id: '', name: '', email: '', token: '' });
+  },
+
+  restoreUserFromStorage: () => {
+    const token = localStorage.getItem('token') || '';
+    const id = localStorage.getItem('id') || '';
+    const name = localStorage.getItem('name') || '';
+    const email = localStorage.getItem('email') || '';
+    if (token) set({ id, name, email, token });
+  },
 }));
