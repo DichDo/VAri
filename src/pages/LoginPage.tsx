@@ -50,3 +50,46 @@ const LoginPage: React.FC = () => {
 };
 
 export default LoginPage;
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { loginApi } from "../services/mockApi"
+import { useAuth } from "../hooks/useAuth"
+
+export default function Login() {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+  const navigate = useNavigate()
+  const { setUser, setToken } = useAuth()
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    try {
+      const { user, token } = await loginApi(email, password)
+      setUser(user)
+      setToken(token)
+      navigate("/profile")
+    } catch (err) {
+      setError("Login failed")
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <h2>Login</h2>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      <input
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Email"
+      />
+      <input
+        value={password}
+        type="password"
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
+      />
+      <button type="submit">Login</button>
+    </form>
+  )
+}
