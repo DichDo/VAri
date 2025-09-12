@@ -39,3 +39,12 @@ const ProfilePage: React.FC = () => {
 };
 
 export default ProfilePage;
+export async function loginApi(email: string, password: string) {
+  if (email === "test@test.com" && password === "1234") {
+    return {
+      user: { id: "1", name: "Test User", email },
+      token: "mock-jwt-token"
+    }
+  }
+  throw new Error("Invalid credentials")
+}
