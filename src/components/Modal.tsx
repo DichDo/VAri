@@ -1,21 +1,23 @@
-import React from 'react';
+import React from "react"
 
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
+interface Props {
+  isOpen: boolean
+  onClose: () => void
+  children: React.ReactNode
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
-  if (!isOpen) return null;
+const Modal: React.FC<Props> = ({ isOpen, onClose, children }) => {
+  if (!isOpen) return null
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded shadow relative">
-        <button onClick={onClose} className="absolute top-2 right-2 font-bold">X</button>
-        {children}
+    <div className="modal-overlay">
+      <div className="modal">
+        <button onClick={onClose} style={{ float: "right", background: "transparent", border: 0, color: "var(--muted)" }}>
+          ✕
+        </button>
+        <div style={{ clear: "both" }}>{children}</div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Modal;
+export default Modal
