@@ -7,7 +7,6 @@ import { useUserStore } from '../store/userStore';
 const ProfilePage: React.FC = () => {
   const { status, loading, error } = useVerification();
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const user = useUserStore((state) => ({
     name: state.name,
     email: state.email,
