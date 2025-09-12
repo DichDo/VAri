@@ -13,7 +13,6 @@ export const useVerification = () => {
   useEffect(() => {
     const fetchStatus = async () => {
       if (!token || !userId) return;
-
       try {
         const data = await fetchVerificationStatus(userId, token);
         setStatus(data);
@@ -23,7 +22,6 @@ export const useVerification = () => {
         setLoading(false);
       }
     };
-
     fetchStatus();
   }, [token, userId]);
 
