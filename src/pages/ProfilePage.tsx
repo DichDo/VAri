@@ -1,68 +1,64 @@
-import React, { useState } from 'react';
-import { useUserStore } from '../store/userStore';
-import { useVerification } from '../hooks/useVerification';
-import Modal from '../components/Modal';
-import Button from '../components/Button';
-
-const ProfilePage: React.FC = () => {
-  const user = useUserStore((state) => ({
-    id: state.id,
-    name: state.name,
-    email: state.email,
-  }));
-
-  const { status, loading, error } = useVerification();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  return (
-    <div className="p-6 max-w-md mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Profile</h1>
-      <div className="bg-gray-100 p-4 rounded shadow mb-4">
-        <p><strong>Name:</strong> {user.name}</p>
-        <p><strong>Email:</strong> {user.email}</p>
-        <p><strong>ID:</strong> {user.id}</p>
-      </div>
-
-      {loading && <p>Loading verification status...</p>}
-      {error && <p className="text-red-500">{error}</p>}
-      {status && (
-        <div className="bg-gray-100 p-4 rounded shadow mb-4">
-          <p><strong>Verified:</strong> {status.verified ? 'Yes' : 'No'}</p>
-          <p><strong>Trust Score:</strong> {status.score}</p>
-          <Button onClick={() => setIsModalOpen(true)}>View Verification Details</Button>
-        </div>
-      )}
-
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2 className="text-xl font-bold mb-2">Verification Details</h2>
-        <p><strong>User ID:</strong> {user.id}</p>
-        <p><strong>Verified:</strong> {status?.verified ? 'Yes' : 'No'}</p>
-        <p><strong>Trust Score:</strong> {status?.score}</p>
-        <Button onClick={() => setIsModalOpen(false)}>Close</Button>
-      </Modal>
-    </div>
-  );
-};
-
-export default ProfilePage;
-import { useNavigate } from "react-router-dom"
-import { useAuth } from "../hooks/useAuth"
+import React, { useState } from "react"
+import { useUserStore } from "../store/userStore"
+import { fetchVerificationStatus } from "../services/mockBackend"
+import Modal from "../components/Modal"
+import Button from "../components/Button"
 
 export default function Profile() {
-  const { user, isAuthenticated, logout } = useAuth()
-  const navigate = useNavigate()
+  const user = useUserStore((s) => s.user)
+  const token = useUserStore((s) => s.token)
+  const logout = useUserStore((s) => s.logout)
+  const [status, setStatus] = useState<{ verified: boolean; score: number } | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [open, setOpen] = useState(false)
 
-  if (!isAuthenticated) {
-    navigate("/login")
-    return null
+  async function refresh() {
+    if (!user || !token) return
+    setError(null)
+    setLoading(true)
+    try {
+      const res = await fetchVerificationStatus(user.id, token)
+      setStatus(res)
+    } catch (err: any) {
+      setError(err.message || "Failed")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
     <div>
-      <h2>Profile</h2>
-      <p>Name: {user?.name}</p>
-      <p>Email: {user?.email}</p>
-      <button onClick={() => { logout(); navigate("/") }}>Logout</button>
+      <div className="card">
+        <h2 className="h2">Profile</h2>
+        <p className="small">Name: {user?.name}</p>
+        <p className="small">Email: {user?.email}</p>
+        <div style={{ marginTop: 12 }} className="row">
+          <Button onClick={refresh}>Check verification</Button>
+          <Button className="btn-ghost" onClick={() => { logout(); window.location.href = "/" }}>Logout</Button>
+        </div>
+
+        {loading && <p className="small mt-1">Checking...</p>}
+        {error && <p style={{ color: "var(--danger)" }}>{error}</p>}
+
+        {status && (
+          <div style={{ marginTop: 12 }}>
+            <p><strong>Verified:</strong> {status.verified ? "Yes" : "No"}</p>
+            <p><strong>Trust Score:</strong> {status.score}</p>
+            <Button onClick={() => setOpen(true)}>Details</Button>
+          </div>
+        )}
+      </div>
+
+      <Modal isOpen={open} onClose={() => setOpen(false)}>
+        <h3 className="h2">Verification details</h3>
+        <p className="small">User ID: {user?.id}</p>
+        <p className="small">Verified: {status?.verified ? "Yes" : "No"}</p>
+        <p className="small">Score: {status?.score}</p>
+        <div style={{ marginTop: 12 }}>
+          <Button onClick={() => setOpen(false)}>Close</Button>
+        </div>
+      </Modal>
     </div>
   )
 }
