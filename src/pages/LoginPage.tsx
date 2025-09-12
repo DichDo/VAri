@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '../store/userStore';
 import { loginUser } from '../services/authApi';
@@ -10,13 +10,18 @@ const LoginPage: React.FC = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const setUser = useUserStore((state) => state.setUser);
+  const token = useUserStore((state) => state.token);
+
+  useEffect(() => {
+    if (token) navigate('/profile');
+  }, [token, navigate]);
 
   const handleLogin = async () => {
     try {
       const res = await loginUser(email, password);
       setUser(res.id, res.name, res.email, res.token);
       localStorage.setItem('token', res.token);
-      navigate('/profile'); // Redirect after login
+      navigate('/profile');
     } catch (err: any) {
       setError(err.message);
     }
