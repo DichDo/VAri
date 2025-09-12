@@ -1,95 +1,59 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useUserStore } from '../store/userStore';
-import { loginUser } from '../services/mockBackend';
-import Button from '../components/Button';
-
-const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState('test@example.com');
-  const [password, setPassword] = useState('123456');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
-  const token = useUserStore((state) => state.token);
-  const setUser = useUserStore((state) => state.setUser);
-
-  useEffect(() => {
-    if (token) navigate('/profile');
-  }, [token, navigate]);
-
-  const handleLogin = async () => {
-    try {
-      const res = await loginUser(email, password);
-      setUser(res.id, res.name, res.email, res.token);
-      navigate('/profile');
-    } catch (err: any) {
-      setError(err.message);
-    }
-  };
-
-  return (
-    <div className="p-6 max-w-md mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Login</h1>
-      {error && <p className="text-red-500 mb-2">{error}</p>}
-      <input
-        type="email"
-        placeholder="Email"
-        className="border p-2 w-full mb-2"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        className="border p-2 w-full mb-4"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <Button onClick={handleLogin}>Login</Button>
-    </div>
-  );
-};
-
-export default LoginPage;
-import { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { loginApi } from "../services/mockApi"
-import { useAuth } from "../hooks/useAuth"
+import { loginApi } from "../services/mockBackend"
+import { useUserStore } from "../store/userStore"
+import Button from "../components/Button"
 
 export default function Login() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
+  const setUser = useUserStore((s) => s.setUser)
+  const setToken = useUserStore((s) => s.setToken)
+  const restore = useUserStore((s) => s.restore)
+  const token = useUserStore((s) => s.token)
   const navigate = useNavigate()
-  const { setUser, setToken } = useAuth()
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
+  useEffect(() => {
+    restore()
+  }, [restore])
+
+  useEffect(() => {
+    if (token) navigate("/profile")
+  }, [token, navigate])
+
+  const [email, setEmail] = useState("test@test.com")
+  const [password, setPassword] = useState("1234")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  async function handleLogin(e?: React.FormEvent) {
+    e?.preventDefault()
+    setError(null)
+    setLoading(true)
     try {
-      const { user, token } = await loginApi(email, password)
-      setUser(user)
-      setToken(token)
+      const res = await loginApi(email, password)
+      setUser(res.user)
+      setToken(res.token)
       navigate("/profile")
-    } catch (err) {
-      setError("Login failed")
+    } catch (err: any) {
+      setError(err.message || "Login failed")
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Login</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <input
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-      />
-      <input
-        value={password}
-        type="password"
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-      />
-      <button type="submit">Login</button>
-    </form>
+    <div className="card">
+      <h2 className="h2">Sign in</h2>
+      <form className="form" onSubmit={handleLogin}>
+        <label className="label">Email</label>
+        <input className="input" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <label className="label">Password</label>
+        <input className="input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        {error && <p style={{ color: "var(--danger)" }}>{error}</p>}
+        <div style={{ marginTop: 8 }}>
+          <Button type="submit">{loading ? "Signing in..." : "Sign in"}</Button>
+        </div>
+      </form>
+      <p className="small mt-2">demo credentials: test@test.com / 1234</p>
+    </div>
   )
 }
