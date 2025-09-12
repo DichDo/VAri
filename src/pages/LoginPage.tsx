@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '../store/userStore';
-import { loginUser } from '../services/authApi';
+import { loginUser } from '../services/mockBackend';
 import Button from '../components/Button';
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('test@example.com');
+  const [password, setPassword] = useState('123456');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const setUser = useUserStore((state) => state.setUser);
   const token = useUserStore((state) => state.token);
+  const setUser = useUserStore((state) => state.setUser);
 
   useEffect(() => {
     if (token) navigate('/profile');
