@@ -15,7 +15,6 @@ export const useUserStore = create<UserState>((set) => ({
   name: '',
   email: '',
   token: '',
-
   setUser: (id, name, email, token) => {
     localStorage.setItem('token', token);
     localStorage.setItem('id', id);
@@ -23,15 +22,10 @@ export const useUserStore = create<UserState>((set) => ({
     localStorage.setItem('email', email);
     set({ id, name, email, token });
   },
-
   clearUser: () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('id');
-    localStorage.removeItem('name');
-    localStorage.removeItem('email');
+    localStorage.clear();
     set({ id: '', name: '', email: '', token: '' });
   },
-
   restoreUserFromStorage: () => {
     const token = localStorage.getItem('token') || '';
     const id = localStorage.getItem('id') || '';
