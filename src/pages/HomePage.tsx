@@ -8,3 +8,15 @@ const HomePage: React.FC = () => (
 );
 
 export default HomePage;
+import { Link } from "react-router-dom"
+
+export default function Home() {
+  return (
+    <div>
+      <h1>Welcome to Vairi</h1>
+      <p>
+        <Link to="/login">Login</Link> or <Link to="/profile">Profile</Link>
+      </p>
+    </div>
+  )
+}
