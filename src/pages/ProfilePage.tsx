@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import useVerification from '../hooks/useVerification';
+import { useVerification } from '../hooks/useVerification';
 import Modal from '../components/Modal';
 import Button from '../components/Button';
 
 const ProfilePage: React.FC = () => {
-  const userId = '12345';
-  const { status, loading, error } = useVerification(userId);
+  const { status, loading, error } = useVerification();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -25,7 +24,6 @@ const ProfilePage: React.FC = () => {
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <h2 className="text-xl font-bold">Verification Details</h2>
-        <p>User ID: {userId}</p>
         <p>Verified: {status?.verified ? 'Yes' : 'No'}</p>
         <p>Trust Score: {status?.score}</p>
         <Button onClick={() => setIsModalOpen(false)}>Close</Button>
