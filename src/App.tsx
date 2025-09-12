@@ -1,24 +1,32 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './components/Login';
-import Dashboard from './components/Dashboard';
-import Protected from './components/Protected';
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import ProfilePage from './pages/ProfilePage';
+import LoginPage from './pages/LoginPage';
+import PrivateRoute from './components/PrivateRoute';
+import Navbar from './components/Navbar';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <Router>
+    <BrowserRouter>
+      <Navbar />
       <Routes>
-        <Route path="/login" element={<Login />} />
+        {/* Public routes */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+
+        {/* Protected route */}
         <Route
-          path="/dashboard"
+          path="/profile"
           element={
-            <Protected>
-              <Dashboard />
-            </Protected>
+            <PrivateRoute>
+              <ProfilePage />
+            </PrivateRoute>
           }
         />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
