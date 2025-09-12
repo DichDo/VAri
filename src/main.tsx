@@ -1,23 +1,15 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import './index.css';
-import { useUserStore } from './store/userStore';
-
-useUserStore.getState().restoreUserFromStorage();
-
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
 import React from "react"
 import ReactDOM from "react-dom/client"
+import { BrowserRouter } from "react-router-dom"
 import App from "./App"
 import "./index.css"
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+const root = document.getElementById("root") as HTMLElement
+
+ReactDOM.createRoot(root).render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>
 )
