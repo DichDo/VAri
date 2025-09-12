@@ -1,5 +1,259 @@
+/* index.css - elegant, minimal, responsive theme for VAri */
+
+/* Theme variables */
+:root {
+  --bg: #0f1724;
+  --paper: #0b1320;
+  --muted: #94a3b8;
+  --accent: #7dd3fc;
+  --accent-2: #60a5fa;
+  --glass: rgba(255, 255, 255, 0.04);
+  --glass-2: rgba(255, 255, 255, 0.02);
+  --success: #34d399;
+  --danger: #fb7185;
+  --shadow: 0 8px 30px rgba(2,6,23,0.6);
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+  --ease: cubic-bezier(.2,.9,.3,1);
+  --max-width: 980px;
+  --container-gap: 1.25rem;
+}
+
+/* Global resets */
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
 body {
   margin: 0;
-  font-family: sans-serif;
-  background-color: #f9f9f9;
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(96,165,250,0.06), transparent),
+              linear-gradient(180deg, var(--bg) 0%, #071025 100%);
+  color: #e6eef8;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
+
+/* App container */
+.app {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  gap: var(--container-gap);
+}
+
+/* Cards and panels */
+.card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--glass);
+  backdrop-filter: blur(6px);
+  transition: transform 260ms var(--ease), box-shadow 260ms var(--ease);
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 50px rgba(2,6,23,0.7);
+}
+
+/* Header / navbar */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+  font-size: 1.125rem;
+  color: white;
+}
+
+.logo-mark {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 6px 18px rgba(96,165,250,0.12), inset 0 -6px 14px rgba(255,255,255,0.03);
+}
+
+/* Nav links */
+.nav {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.nav a {
+  color: var(--muted);
+  text-decoration: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  transition: color 160ms var(--ease), background 160ms var(--ease);
+  font-weight: 500;
+}
+
+.nav a:hover {
+  color: #fff;
+  background: var(--glass-2);
+}
+
+/* Grid layout */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+/* Responsive single column */
+@media (max-width: 920px) {
+  .layout { grid-template-columns: 1fr; }
+}
+
+/* Form elements */
+.form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.input, textarea, select {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--glass);
+  color: inherit;
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: box-shadow 160ms var(--ease), border-color 160ms var(--ease);
+  font-size: 0.95rem;
+}
+
+.input:focus, textarea:focus, select:focus {
+  box-shadow: 0 6px 18px rgba(96,165,250,0.12);
+  border-color: var(--accent);
+}
+
+.label {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 1rem;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 160ms var(--ease), box-shadow 160ms var(--ease);
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  color: #04263b;
+  box-shadow: 0 8px 30px rgba(96,165,250,0.12);
+}
+
+.btn:active { transform: translateY(1px); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid rgba(125,211,252,0.12);
+}
+
+/* Badge / status */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  background: rgba(255,255,255,0.03);
+  color: var(--muted);
+}
+
+/* Small utilities */
+.row { display:flex; gap:0.75rem; align-items:center; }
+.col { display:flex; flex-direction:column; gap:0.5rem; }
+.center { display:flex; align-items:center; justify-content:center; }
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2,6,23,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 60;
+}
+
+.modal {
+  width: min(720px, calc(100% - 3rem));
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.015));
+  border-radius: 14px;
+  padding: 1.25rem;
+  border: 1px solid rgba(255,255,255,0.03);
+  box-shadow: 0 24px 60px rgba(2,6,23,0.75);
+}
+
+/* Footer */
+.footer {
+  margin-top: 2rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* Tiny animations */
+.fade-in {
+  animation: fadeIn 360ms var(--ease) both;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Accessibility focus ring */
+:focus { outline: none; box-shadow: 0 0 0 3px rgba(125,211,252,0.12); }
+
+/* Helpers for content */
+.h1 { font-size: 1.5rem; margin: 0 0 0.5rem 0; font-weight: 700; }
+.h2 { font-size: 1.125rem; margin: 0 0 0.5rem 0; font-weight: 600; color: #e6eef8; }
+.small { font-size: 0.85rem; color: var(--muted); }
+
+/* Utility spacing */
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mb-1 { margin-bottom: 0.5rem; }
+.p-2 { padding: 0.75rem; }
+
+/* Minimal table style */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: transparent;
+}
+
+.table th, .table td {
+  padding: 0.65rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+  color: #dbeafe;
+  font-size: 0.95rem;
+}
+
+.table th { color: var(--muted); font-weight: 600; font-size: 0.85rem; }
