@@ -21,6 +21,9 @@ const LoginPage: React.FC = () => {
       const res = await loginUser(email, password);
       setUser(res.id, res.name, res.email, res.token);
       localStorage.setItem('token', res.token);
+      localStorage.setItem('id', res.id);
+      localStorage.setItem('name', res.name);
+      localStorage.setItem('email', res.email);
       navigate('/profile');
     } catch (err: any) {
       setError(err.message);
