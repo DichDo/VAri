@@ -1,28 +1,34 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useUserStore } from '../store/userStore';
-import Button from './Button';
+import React from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { useUserStore } from "../store/userStore"
+import Button from "./Button"
 
 const Navbar: React.FC = () => {
-  const token = useUserStore((state) => state.token);
-  const clearUser = useUserStore((state) => state.clearUser);
-  const navigate = useNavigate();
+  const token = useUserStore((s) => s.token)
+  const logout = useUserStore((s) => s.logout)
+  const navigate = useNavigate()
 
-  const handleLogout = () => {
-    clearUser();
-    navigate('/login');
-  };
+  const doLogout = () => {
+    logout()
+    navigate("/login")
+  }
 
   return (
-    <nav className="bg-gray-200 p-4 flex justify-between items-center">
-      <Link to="/" className="font-bold text-lg">VAri</Link>
-      {token ? (
-        <Button onClick={handleLogout}>Logout</Button>
-      ) : (
-        <Link to="/login">Login</Link>
-      )}
-    </nav>
-  );
-};
+    <>
+      <div className="nav">
+        <Link to="/">Home</Link>
+        <Link to="/profile">Profile</Link>
+      </div>
 
-export default Navbar;
+      <div className="nav">
+        {token ? (
+          <Button onClick={doLogout} className="btn-ghost">Logout</Button>
+        ) : (
+          <Link to="/login">Login</Link>
+        )}
+      </div>
+    </>
+  )
+}
+
+export default Navbar
