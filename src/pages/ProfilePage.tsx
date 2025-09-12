@@ -45,3 +45,24 @@ const ProfilePage: React.FC = () => {
 };
 
 export default ProfilePage;
+import { useNavigate } from "react-router-dom"
+import { useAuth } from "../hooks/useAuth"
+
+export default function Profile() {
+  const { user, isAuthenticated, logout } = useAuth()
+  const navigate = useNavigate()
+
+  if (!isAuthenticated) {
+    navigate("/login")
+    return null
+  }
+
+  return (
+    <div>
+      <h2>Profile</h2>
+      <p>Name: {user?.name}</p>
+      <p>Email: {user?.email}</p>
+      <button onClick={() => { logout(); navigate("/") }}>Logout</button>
+    </div>
+  )
+}
