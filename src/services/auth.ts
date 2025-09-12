@@ -17,3 +17,19 @@ export const logout = () => {
 };
 
 export const getToken = () => localStorage.getItem('token');
+
+export const validateToken = async () => {
+  const token = getToken();
+  if (!token) return false;
+
+  try {
+    const res = await fetch('https://api.yourdomain.com/validate-token', {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    if (!res.ok) return false;
+    const data = await res.json();
+    return data.valid;
+  } catch {
+    return false;
+  }
+};
