@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  email      String   @unique
+  phone      String?
+  password   String
+  name       String?
+  trustScore Int      @default(0)
+  createdAt  DateTime @default(now())
+  verifications Verification[]
+}
+
+model Verification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  type      String
+  status    String
+  meta      String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
